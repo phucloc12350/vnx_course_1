@@ -13,7 +13,7 @@ interface ChatWindowProps {
 }
 
 export default function ChatWindow({ level, weakness }: ChatWindowProps) {
-  const { messages, sendMessage, status } = useChat();
+  const { messages, sendMessage, status, error } = useChat();
 
   const [input, setInput] = useState('');
   const isLoading = status === 'submitted' || status === 'streaming';
@@ -115,6 +115,16 @@ export default function ChatWindow({ level, weakness }: ChatWindowProps) {
               </div>
             );
           })}
+          {error && (
+            <div style={{ textAlign: 'center', color: '#ff4d4f', padding: '12px', margin: '8px 0', border: '1px solid #ffa39e', borderRadius: '8px', backgroundColor: '#fff2f0' }}>
+              <strong>⚠️ Lỗi Hệ Thống:</strong>
+              <div style={{ marginTop: '8px', fontSize: '13px' }}>
+                {error.message.includes('Quota exceeded') || error.message.includes('429') 
+                  ? 'API Key Gemini của bạn đã hết hạn mức truy cập miễn phí. Vui lòng thử lại sau vài phút hoặc thay API Key khác trong file .env.local nhé!'
+                  : ('Chi tiết lỗi: ' + error.message)}
+              </div>
+            </div>
+          )}
         </div>
         <div ref={messagesEndRef} />
       </div>
