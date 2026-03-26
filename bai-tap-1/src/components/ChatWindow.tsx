@@ -2,6 +2,7 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 import { useChat } from '@ai-sdk/react';
+import ReactMarkdown from 'react-markdown';
 import { Input, Button, Avatar, Typography } from 'antd';
 import { UserOutlined, RobotOutlined, SendOutlined } from '@ant-design/icons';
 
@@ -108,7 +109,26 @@ export default function ChatWindow({ level, weakness }: ChatWindowProps) {
                     }}
                   >
                     {msg.parts?.filter((p: any) => p.type === 'text').map((p: any, i: number) => (
-                      <span key={i}>{p.text}</span>
+                      <ReactMarkdown 
+                        key={i}
+                        components={{
+                          p: ({node, ...props}) => <div style={{ marginBottom: '8px', display: 'inline-block' }} {...props} />,
+                          strong: ({node, ...props}) => (
+                            <strong 
+                              style={{ 
+                                color: isUser ? '#fff' : '#f5222d', 
+                                fontWeight: 600, 
+                                backgroundColor: isUser ? 'transparent' : '#fff1f0',
+                                padding: '2px 4px',
+                                borderRadius: '4px'
+                              }} 
+                              {...props} 
+                            />
+                          )
+                        }}
+                      >
+                        {p.text}
+                      </ReactMarkdown>
                     ))}
                   </div>
                 </div>
