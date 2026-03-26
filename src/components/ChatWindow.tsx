@@ -7,10 +7,13 @@ import { UserOutlined, RobotOutlined, SendOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
 
-export default function ChatWindow() {
-  const { messages, sendMessage, status } = useChat({
-    // maxSteps: 2 removed as it doesn't exist in useChat Options
-  });
+interface ChatWindowProps {
+  level?: string;
+  weakness?: string;
+}
+
+export default function ChatWindow({ level, weakness }: ChatWindowProps) {
+  const { messages, sendMessage, status } = useChat();
 
   const [input, setInput] = useState('');
   const isLoading = status === 'submitted' || status === 'streaming';
@@ -19,10 +22,13 @@ export default function ChatWindow() {
     setInput(e.target.value);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (e?: React.FormEvent) => {
+    e?.preventDefault();
     if (!input.trim()) return;
-    sendMessage({ role: 'user', parts: [{ type: 'text', text: input }] } as any);
+    sendMessage(
+      { role: 'user', parts: [{ type: 'text', text: input }] } as any,
+      { body: { level, weakness } }
+    );
     setInput('');
   };
 
